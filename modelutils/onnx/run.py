@@ -1,0 +1,78 @@
+import argparse
+import os
+import sys
+import tempfile
+import onnx
+import onnxruntime
+from PIL import Image
+import numpy as np
+
+
+def add_output_node(input_model_filename, output_model_filename, output_node_names):
+    model = onnx.ModelProto()
+    with open(input_model_filename, 'rb') as f:
+        model.ParseFromString(f.read())
+
+    existing_output_names = set([o.name for o in model.graph.output])
+    for output_name in set(output_node_names) - existing_output_names:
+        model.graph.output.append(onnx.helper.make_tensor_value_info(output_name, onnx.TensorProto.FLOAT, None))
+
+    with open(output_model_filename, 'wb') as f:
+        f.write(model.SerializeToString())
+
+        
+def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True):
+    image = Image.open(image_filename)
+    image = image.resize(input_shape[2:], Image.ANTIALIAS)
+    image = image.convert('RGB') if image.mode != 'RGB' else image
+    image = np.asarray(image, dtype=np.float32)
+    image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
+    image = image.transpose((2,0,1))
+    image = image[np.newaxis, :]
+    image = image.astype(np.float16) if input_type == 'tensor(float16)' else image
+    return image
+
+
+def dump_outputs(name, shape, data):
+    print('-- {} {}'.format(name, shape))
+    for i in range(len(data)):
+        print('{}: {}'.format(i, data[i]))
+
+
+def main(model_filename, image_filename, output_names):
+    if output_names:
+        with tempfile.TemporaryDirectory() as tempdir:
+            temp_model_filename = os.path.join(tempdir, 'model.onnx')
+            add_output_node(model_filename, temp_model_filename, output_names)
+            sess = onnxruntime.InferenceSession(temp_model_filename)
+    else:
+        sess = onnxruntime.InferenceSession(model_filename)
+        output_names = [o.name for o in sess.get_outputs()]
+
+    # TODO: Read input format from ONNX model
+    is_bgr = True
+    
+    image = preprocess_inputs(image_filename, sess.get_inputs()[0].shape, sess.get_inputs()[0].type, is_bgr)
+
+    outputs = sess.run(output_names, {'data': image})
+    
+    for i, output_name in enumerate(output_names):
+        if isinstance(outputs[i], list):
+            assert len(outputs[i]) == 1
+            outputs[i] = outputs[i][0]
+
+        if isinstance(outputs[i], dict):
+            keys = sorted(list(outputs[i].keys()))
+            outputs[i] = np.array([outputs[i][k] for k in keys])
+
+        dump_outputs(output_name, outputs[i].shape, outputs[i].flatten())
+
+            
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser('Run a ONNX model with ONNX Runtime')
+    parser.add_argument('onnx_filename', type=str, help='Filename for the pb file')
+    parser.add_argument('image_filename', type=str, help='Filename for the input image')
+    parser.add_argument('--output_name', type=str, nargs='+', default=[], help='Blob name to be extracted')
+
+    args = parser.parse_args()
+    main(args.onnx_filename, args.image_filename, args.output_name)
