@@ -14,6 +14,7 @@ setup(name='modelutils',
       entry_points={
           'console_scripts': [
               'modelutils-dump-onnx=modelutils.onnx.dump:main',
+              'modelutils-dump-tensorflow=modelutils.tensorflow.dump:main',
               'modelutils-run-onnx=modelutils.onnx.run:main'
           ]
       })
