@@ -20,7 +20,7 @@ def add_output_node(input_model_filename, output_model_filename, output_node_nam
     with open(output_model_filename, 'wb') as f:
         f.write(model.SerializeToString())
 
-        
+
 def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True):
     image = Image.open(image_filename)
     image = image.resize(input_shape[2:], Image.ANTIALIAS)
@@ -39,7 +39,7 @@ def dump_outputs(name, shape, data):
         print('{}: {}'.format(i, data[i]))
 
 
-def main(model_filename, image_filename, output_names):
+def run(model_filename, image_filename, output_names):
     if output_names:
         with tempfile.TemporaryDirectory() as tempdir:
             temp_model_filename = os.path.join(tempdir, 'model.onnx')
@@ -51,11 +51,11 @@ def main(model_filename, image_filename, output_names):
 
     # TODO: Read input format from ONNX model
     is_bgr = True
-    
+
     image = preprocess_inputs(image_filename, sess.get_inputs()[0].shape, sess.get_inputs()[0].type, is_bgr)
 
     outputs = sess.run(output_names, {'data': image})
-    
+
     for i, output_name in enumerate(output_names):
         if isinstance(outputs[i], list):
             assert len(outputs[i]) == 1
@@ -67,12 +67,16 @@ def main(model_filename, image_filename, output_names):
 
         dump_outputs(output_name, outputs[i].shape, outputs[i].flatten())
 
-            
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser('Run a ONNX model with ONNX Runtime')
     parser.add_argument('onnx_filename', type=str, help='Filename for the pb file')
     parser.add_argument('image_filename', type=str, help='Filename for the input image')
     parser.add_argument('--output_name', type=str, nargs='+', default=[], help='Blob name to be extracted')
 
     args = parser.parse_args()
-    main(args.onnx_filename, args.image_filename, args.output_name)
+    run(args.onnx_filename, args.image_filename, args.output_name)
+
+
+if __name__ == '__main__':
+    main()
