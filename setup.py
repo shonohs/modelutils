@@ -18,6 +18,8 @@ setup(name='modelutils',
               'modelutils-dump-coreml=modelutils.coreml.dump:main',
               'modelutils-dump-onnx=modelutils.onnx.dump:main',
               'modelutils-dump-tensorflow=modelutils.tensorflow.dump:main',
+              'modelutils-load-onnx=modelutils.onnx.load:main',
+              'modelutils-load-tensorflow=modelutils.tensorflow.load:main',
               'modelutils-run-onnx=modelutils.onnx.run:main'
           ]
       })
