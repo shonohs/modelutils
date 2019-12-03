@@ -21,15 +21,23 @@ def add_output_node(input_model_filename, output_model_filename, output_node_nam
         f.write(model.SerializeToString())
 
 
-def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True):
+def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True, normalize_inputs=False, subtract_inputs=[]):
     image = Image.open(image_filename)
     image = image.resize(input_shape[2:], Image.ANTIALIAS)
     image = image.convert('RGB') if image.mode != 'RGB' else image
     image = np.asarray(image, dtype=np.float32)
+
+    if subtract_inputs:
+        assert len(subtract_inputs) == 3
+        image -= np.array(subtract_inputs, dtype=np.float32)
+
     image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
     image = image.transpose((2,0,1))
     image = image[np.newaxis, :]
     image = image.astype(np.float16) if input_type == 'tensor(float16)' else image
+
+    if normalize_inputs:
+        image /= 255
     return image
 
 
@@ -39,7 +47,7 @@ def dump_outputs(name, shape, data):
         print('{}: {}'.format(i, data[i]))
 
 
-def run(model_filename, image_filename, output_names):
+def run(model_filename, image_filename, output_names, normalize_inputs, subtract_inputs):
     if output_names:
         with tempfile.TemporaryDirectory() as tempdir:
             temp_model_filename = os.path.join(tempdir, 'model.onnx')
@@ -52,7 +60,7 @@ def run(model_filename, image_filename, output_names):
     # TODO: Read input format from ONNX model
     is_bgr = True
 
-    image = preprocess_inputs(image_filename, sess.get_inputs()[0].shape, sess.get_inputs()[0].type, is_bgr)
+    image = preprocess_inputs(image_filename, sess.get_inputs()[0].shape, sess.get_inputs()[0].type, is_bgr, normalize_inputs, subtract_inputs)
 
     outputs = sess.run(output_names, {sess.get_inputs()[0].name: image})
 
@@ -73,9 +81,11 @@ def main():
     parser.add_argument('onnx_filename', type=str, help='Filename for the pb file')
     parser.add_argument('image_filename', type=str, help='Filename for the input image')
     parser.add_argument('--output_name', type=str, nargs='+', default=[], help='Blob name to be extracted')
+    parser.add_argument('--normalize_inputs', action='store_true', help="Normalize the input to [0-1] range")
+    parser.add_argument('--subtract_inputs', nargs='+', help="Subtract specified values from RGB inputs. ex) --subtract_inputs 123 117 104")
 
     args = parser.parse_args()
-    run(args.onnx_filename, args.image_filename, args.output_name)
+    run(args.onnx_filename, args.image_filename, args.output_name, args.normalize_inputs, args.subtract_inputs)
 
 
 if __name__ == '__main__':
