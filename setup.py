@@ -8,6 +8,7 @@ setup(name='modelutils',
       packages=['modelutils'],
       install_requires=[
           'coremltools',
+          'numpy',
           'onnx',
           'onnxruntime',
           'Pillow',
@@ -20,6 +21,7 @@ setup(name='modelutils',
               'modelutils-dump-tensorflow=modelutils.tensorflow.dump:main',
               'modelutils-load-onnx=modelutils.onnx.load:main',
               'modelutils-load-tensorflow=modelutils.tensorflow.load:main',
-              'modelutils-run-onnx=modelutils.onnx.run:main'
+              'modelutils-run-onnx=modelutils.onnx.run:main',
+              'modelutils-summarize-onnx=modelutils.onnx.summarize:main'
           ]
       })
