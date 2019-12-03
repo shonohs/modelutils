@@ -54,7 +54,7 @@ def run(model_filename, image_filename, output_names):
 
     image = preprocess_inputs(image_filename, sess.get_inputs()[0].shape, sess.get_inputs()[0].type, is_bgr)
 
-    outputs = sess.run(output_names, {'data': image})
+    outputs = sess.run(output_names, {sess.get_inputs()[0].name: image})
 
     for i, output_name in enumerate(output_names):
         if isinstance(outputs[i], list):
