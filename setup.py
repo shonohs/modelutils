@@ -22,6 +22,8 @@ setup(name='modelutils',
               'modelutils-load-onnx=modelutils.onnx.load:main',
               'modelutils-load-tensorflow=modelutils.tensorflow.load:main',
               'modelutils-run-onnx=modelutils.onnx.run:main',
-              'modelutils-summarize-onnx=modelutils.onnx.summarize:main'
+              'modelutils-run-tensorflow=modelutils.tensorflow.run:main',
+              'modelutils-summarize-onnx=modelutils.onnx.summarize:main',
+              'modelutils-summarize-tensorflow=modelutils.tensorflow.summarize:main'
           ]
       })
