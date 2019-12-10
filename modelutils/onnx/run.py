@@ -23,7 +23,7 @@ def add_output_node(input_model_filename, output_model_filename, output_node_nam
 
 def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True, normalize_inputs=False, subtract_inputs=[]):
     image = Image.open(image_filename)
-    image = image.resize(input_shape[2:], Image.ANTIALIAS)
+    image = image.resize(input_shape, Image.ANTIALIAS)
     image = image.convert('RGB') if image.mode != 'RGB' else image
     image = np.asarray(image, dtype=np.float32)
 
@@ -47,18 +47,24 @@ def dump_outputs(name, shape, data):
         print('{}: {}'.format(i, data[i]))
 
 
-def run(model_filename, image_filename, output_names, normalize_inputs, subtract_inputs, is_bgr):
+def run(model_filename, image_filename, output_names, normalize_inputs, subtract_inputs, is_bgr, enable_profiling, image_size):
+    session_options = onnxruntime.SessionOptions()
+    session_options.enable_profiling = enable_profiling
+
     if output_names:
         with tempfile.TemporaryDirectory() as tempdir:
             temp_model_filename = os.path.join(tempdir, 'model.onnx')
             add_output_node(model_filename, temp_model_filename, output_names)
-            sess = onnxruntime.InferenceSession(temp_model_filename)
+            sess = onnxruntime.InferenceSession(temp_model_filename, sess_options=session_options)
     else:
-        sess = onnxruntime.InferenceSession(model_filename)
+        sess = onnxruntime.InferenceSession(model_filename, sess_options=session_options)
         output_names = [o.name for o in sess.get_outputs()]
 
     # TODO: Read input format from ONNX model
-    image = preprocess_inputs(image_filename, sess.get_inputs()[0].shape, sess.get_inputs()[0].type, is_bgr, normalize_inputs, subtract_inputs)
+    image_shape = sess.get_inputs()[0].shape[2:]
+    if image_size:
+        image_shape = [int(image_size[0]), int(image_size[0])]
+    image = preprocess_inputs(image_filename, image_shape, sess.get_inputs()[0].type, is_bgr, normalize_inputs, subtract_inputs)
 
     outputs = sess.run(output_names, {sess.get_inputs()[0].name: image})
 
@@ -82,9 +88,11 @@ def main():
     parser.add_argument('--normalize_inputs', action='store_true', help="Normalize the input to [0-1] range")
     parser.add_argument('--subtract_inputs', nargs='+', help="Subtract specified values from RGB inputs. ex) --subtract_inputs 123 117 104")
     parser.add_argument('--bgr', action='store_true', help="Use BGR instead of RGB")
+    parser.add_argument('--enable_profiling', action='store_true', default=False, help="Enable ONNX profiling")
+    parser.add_argument('--image_size', nargs=1, help="Size of input image")
 
     args = parser.parse_args()
-    run(args.onnx_filename, args.image_filename, args.output_name, args.normalize_inputs, args.subtract_inputs, args.bgr)
+    run(args.onnx_filename, args.image_filename, args.output_name, args.normalize_inputs, args.subtract_inputs, args.bgr, args.enable_profiling, args.image_size)
 
 
 if __name__ == '__main__':
