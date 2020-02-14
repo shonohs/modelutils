@@ -24,9 +24,10 @@ def benchmark(onnx_model_filepath, image_filepath):
 
     if image_filepath:
         inputs_shape = sess.get_inputs()[0].shape[2:]
-        inputs = preprocess_inputs(image_filepath, inputs_shape, sess.get_inputs()[0].type)
+        inputs = preprocess_inputs(image_filepath, inputs_shape)
     else:
-        inputs = np.random.rand(1, *sess.get_inputs()[0].shape[1:]).astype(np.float32)
+        inputs = np.random.rand(1, *sess.get_inputs()[0].shape[1:])
+    inputs = inputs.astype(get_data_type(sess.get_inputs()[0].type))
 
     with monitor("First run"):
         sess.run(output_names, {input_name: inputs})
@@ -35,7 +36,13 @@ def benchmark(onnx_model_filepath, image_filepath):
         for i in range(100):
             sess.run(output_names, {input_name: inputs})
 
-def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True, normalize_inputs=False, subtract_inputs=[]):
+def get_data_type(type_name):
+    if type_name == 'tensor(float16)':
+        return np.float16
+    else: # TODO
+        return np.float32
+
+def preprocess_inputs(image_filename, input_shape, is_bgr=True, normalize_inputs=False, subtract_inputs=[]):
     image = Image.open(image_filename)
     image = image.resize(input_shape, Image.ANTIALIAS)
     image = image.convert('RGB') if image.mode != 'RGB' else image
@@ -48,7 +55,6 @@ def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True, norm
     image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
     image = image.transpose((2,0,1))
     image = image[np.newaxis, :]
-    image = image.astype(np.float16) if input_type == 'tensor(float16)' else image
 
     if normalize_inputs:
         image /= 255
