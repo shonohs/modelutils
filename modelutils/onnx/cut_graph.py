@@ -3,6 +3,7 @@ import os
 import onnx
 import onnx.shape_inference
 
+
 def cut_graph(model_filename, output_filename, input_names, output_names):
     """Get a minimum sub graph which has the given input names and the output names.
     Args:
@@ -16,7 +17,6 @@ def cut_graph(model_filename, output_filename, input_names, output_names):
 
     model = onnx.load(model_filename)
 
-
     if not input_names:
         input_names = set([i.name for i in model.graph.input]) - set([i.name for i in model.graph.initializer])
 
@@ -24,10 +24,7 @@ def cut_graph(model_filename, output_filename, input_names, output_names):
         output_names = [o.name for o in model.graph.output]
 
     required_nodes = set()
-    nodes = reversed(list(model.graph.node))
-
     to_visit_nodes = []
-
     initializer_nodes = [i.name for i in model.graph.initializer]
     required_initializers = []
 
@@ -110,6 +107,7 @@ def main():
     args = parser.parse_args()
 
     cut_graph(args.input_filepath, args.output_filepath, args.input_names, args.output_names)
+
 
 if __name__ == '__main__':
     main()

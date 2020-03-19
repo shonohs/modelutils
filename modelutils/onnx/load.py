@@ -1,5 +1,4 @@
 import argparse
-import sys
 import onnx
 from google.protobuf import text_format
 

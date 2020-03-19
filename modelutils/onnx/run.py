@@ -1,6 +1,5 @@
 import argparse
 import os
-import sys
 import tempfile
 import onnx
 import onnxruntime
@@ -44,8 +43,8 @@ def preprocess_inputs(image_filename, input_shape, input_type, is_bgr=True, norm
         assert len(subtract_inputs) == 3
         image -= np.array(subtract_inputs, dtype=np.float32)
 
-    image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
-    image = image.transpose((2,0,1))
+    image = image[:, :, (2, 1, 0)] if is_bgr else image  # RGB -> BGR
+    image = image.transpose((2, 0, 1))
     image = image[np.newaxis, :]
     image = image.astype(np.float16) if input_type == 'tensor(float16)' else image
 

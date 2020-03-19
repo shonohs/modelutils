@@ -10,6 +10,7 @@ def get_input_names(model):
     init_names = set(i.name for i in model.graph.initializer)
     return list(input_names - init_names)
 
+
 def convert(input_filename, output_filename, exclude_tensor_names):
     if os.path.exists(output_filename):
         raise RuntimeError(f"{output_filename} already exists.")

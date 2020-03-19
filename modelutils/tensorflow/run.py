@@ -1,5 +1,4 @@
 import argparse
-import sys
 import tensorflow as tf
 import numpy as np
 from PIL import Image
@@ -34,7 +33,7 @@ def preprocess_inputs(image_filename, input_shape, is_bgr=True, normalize_inputs
         assert len(subtract_inputs) == 3
         image -= np.array(subtract_inputs, dtype=np.float32)
 
-    image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
+    image = image[:, :, (2, 1, 0)] if is_bgr else image  # RGB -> BGR
     image = image[np.newaxis, :]
 
     if normalize_inputs:

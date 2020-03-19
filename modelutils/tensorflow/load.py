@@ -1,6 +1,4 @@
 import argparse
-import sys
-import onnx
 import tensorflow
 from google.protobuf import text_format
 
@@ -28,9 +26,10 @@ def load_savedmodel(in_filename, out_filename):
 def load(in_filename, out_filename):
     try:
         load_graphdef(in_filename, out_filename)
-    except:
+    except Exception:
         print("Failed to load graphdef. Trying SavedModel format.")
         load_savedmodel(in_filename, out_filename)
+
 
 def main():
     parser = argparse.ArgumentParser('Convert a text file to ONNX model')

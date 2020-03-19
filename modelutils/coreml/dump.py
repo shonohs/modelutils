@@ -1,7 +1,5 @@
 import argparse
-import onnx
 import os
-import sys
 import coremltools
 
 

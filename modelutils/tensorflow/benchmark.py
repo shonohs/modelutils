@@ -1,5 +1,4 @@
 import argparse
-import sys
 import time
 import numpy as np
 import tensorflow as tf
@@ -7,6 +6,7 @@ from PIL import Image
 from contextlib import contextmanager
 
 DEVICE_ID = 0
+
 
 @contextmanager
 def monitor(prefix=""):
@@ -16,6 +16,7 @@ def monitor(prefix=""):
     finally:
         end = time.time()
         print(f"{prefix:<20}: {end-start}s")
+
 
 def benchmark(model_filepath, image_filepath):
     graph_def = tf.compat.v1.GraphDef()
@@ -41,12 +42,12 @@ def benchmark(model_filepath, image_filepath):
 
     with monitor("First run"):
         with tf.compat.v1.Session() as sess:
-            outputs = sess.run(output_tensors, {input_tensor_name: inputs})
+            sess.run(output_tensors, {input_tensor_name: inputs})
 
     with monitor("100 run"):
         with tf.compat.v1.Session() as sess:
             for i in range(100):
-                outputs = sess.run(output_tensors, {input_tensor_name: inputs})
+                sess.run(output_tensors, {input_tensor_name: inputs})
 
 
 def get_graph_inputs_outputs(graph_def):
@@ -76,7 +77,7 @@ def preprocess_inputs(image_filename, input_shape, is_bgr=True, normalize_inputs
         assert len(subtract_inputs) == 3
         image -= np.array(subtract_inputs, dtype=np.float32)
 
-    image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
+    image = image[:, :, (2, 1, 0)] if is_bgr else image  # RGB -> BGR
     image = image[np.newaxis, :]
 
     if normalize_inputs:

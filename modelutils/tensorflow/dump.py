@@ -1,6 +1,5 @@
 import argparse
 import os
-import sys
 import tensorflow as tf
 
 
@@ -10,7 +9,7 @@ def load_model(filename):
         with open(filename, 'rb') as f:
             graph_def.ParseFromString(f.read())
         return graph_def
-    except:
+    except Exception:
         # Try SavedModel format.
         from tensorflow.core.protobuf import saved_model_pb2
         saved_model_def = saved_model_pb2.SavedModel()

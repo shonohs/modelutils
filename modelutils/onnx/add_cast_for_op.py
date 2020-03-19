@@ -2,7 +2,6 @@ import argparse
 import os
 import onnx
 import onnx.numpy_helper
-import numpy as np
 
 
 def insert_cast_op(model, index, input_name, output_name, to_type):
@@ -14,6 +13,7 @@ def insert_cast_op(model, index, input_name, output_name, to_type):
     model.graph.node.extend(node_list)
 
     print(f"Inserted Cast {input_name} => {output_name}")
+
 
 def add_cast_for_op(model, index, input_indices, to_type):
     for i in input_indices:
@@ -58,6 +58,7 @@ def main():
     args = parser.parse_args()
 
     add_cast(args.input_filepath, args.output_filepath, args.op_type, args.input_indices, args.to)
+
 
 if __name__ == '__main__':
     main()

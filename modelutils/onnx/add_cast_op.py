@@ -2,7 +2,6 @@ import argparse
 import os
 import onnx
 import onnx.numpy_helper
-import numpy as np
 
 
 def insert_cast_op(model, index, input_name, output_name, to_type):
@@ -24,6 +23,7 @@ def add_cast_to_tensor(model, tensor_name, to_type):
                 return model
 
     raise RuntimeError(f"tensor name {tensor_name} is not found")
+
 
 def add_cast(input_filename, output_filename, tensor_names, to_type):
     if os.path.exists(output_filename):
@@ -48,6 +48,7 @@ def main():
     args = parser.parse_args()
 
     add_cast(args.input_filepath, args.output_filepath, args.tensor_name, args.to)
+
 
 if __name__ == '__main__':
     main()

@@ -1,6 +1,5 @@
 import argparse
 import json
-import os
 import numpy as np
 import tensorflow as tf
 
@@ -70,6 +69,7 @@ def main():
 
     args = parser.parse_args()
     copy_weights_to_tensorflowjs(args.pb_filename, args.tfjs_json_filename, args.tfjs_bin_filename, args.tensor_name)
+
 
 if __name__ == '__main__':
     main()

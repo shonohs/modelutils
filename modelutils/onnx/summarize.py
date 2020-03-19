@@ -3,18 +3,20 @@ import onnx
 import onnx.numpy_helper
 import numpy as np
 
+
 def get_attribute(node, name):
     for attr in node.attribute:
         if attr.name == name:
-            if attr.type == 1: # FLOAT
+            if attr.type == 1:  # FLOAT
                 return attr.f
-            elif attr.type == 2: # INT
+            elif attr.type == 2:  # INT
                 return attr.i
-            elif attr.type == 7: # INTS
+            elif attr.type == 7:  # INTS
                 return [i for i in attr.ints]
             else:
                 raise RuntimeError(f"Unsupported type: {attr.type}")
     return None
+
 
 def node_summary(node):
     summary = [node.op_type, str(node.input), '=> ' + str(node.output)]
@@ -67,6 +69,7 @@ def summarize(filename):
     print(f"ONNX IR version: {model.ir_version}, opset version: {opset_version}")
     print_nodes_summary(model)
     print_weights_summary(model)
+
 
 def main():
     parser = argparse.ArgumentParser('Get a summary of an ONNX model')

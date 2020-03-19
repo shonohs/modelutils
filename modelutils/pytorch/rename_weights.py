@@ -29,5 +29,6 @@ def main():
 
     rename_weights(args.input_filepath, args.output_filepath, args.rename)
 
+
 if __name__ == '__main__':
     main()

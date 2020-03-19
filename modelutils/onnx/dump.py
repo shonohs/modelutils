@@ -1,7 +1,6 @@
 import argparse
 import onnx
 import os
-import sys
 
 
 def load_model(filename):

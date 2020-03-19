@@ -1,7 +1,6 @@
 import argparse
-import os
-import sys
 import tensorflow as tf
+
 
 def pprint_table(table):
     max_lens = [0] * max([len(t) for t in table])

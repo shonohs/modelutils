@@ -1,5 +1,4 @@
 import argparse
-import sys
 import time
 import numpy as np
 import onnxruntime
@@ -7,6 +6,7 @@ from PIL import Image
 from contextlib import contextmanager
 
 DEVICE_ID = 0
+
 
 @contextmanager
 def monitor(prefix=""):
@@ -16,6 +16,7 @@ def monitor(prefix=""):
     finally:
         end = time.time()
         print(f"{prefix:<20}: {end-start}s")
+
 
 def benchmark(onnx_model_filepath, image_filepath):
     sess = onnxruntime.InferenceSession(onnx_model_filepath)
@@ -36,11 +37,13 @@ def benchmark(onnx_model_filepath, image_filepath):
         for i in range(100):
             sess.run(output_names, {input_name: inputs})
 
+
 def get_data_type(type_name):
     if type_name == 'tensor(float16)':
         return np.float16
-    else: # TODO
+    else:  # TODO
         return np.float32
+
 
 def preprocess_inputs(image_filename, input_shape, is_bgr=True, normalize_inputs=False, subtract_inputs=[]):
     image = Image.open(image_filename)
@@ -52,13 +55,14 @@ def preprocess_inputs(image_filename, input_shape, is_bgr=True, normalize_inputs
         assert len(subtract_inputs) == 3
         image -= np.array(subtract_inputs, dtype=np.float32)
 
-    image = image[:, :, (2,1,0)] if is_bgr else image # RGB -> BGR
-    image = image.transpose((2,0,1))
+    image = image[:, :, (2, 1, 0)] if is_bgr else image  # RGB -> BGR
+    image = image.transpose((2, 0, 1))
     image = image[np.newaxis, :]
 
     if normalize_inputs:
         image /= 255
     return image
+
 
 def main():
     parser = argparse.ArgumentParser("Benchmark an ONNX model")
@@ -68,6 +72,7 @@ def main():
     args = parser.parse_args()
 
     benchmark(args.onnx_model, args.image_filename)
+
 
 if __name__ == '__main__':
     main()
