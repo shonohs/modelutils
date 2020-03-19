@@ -1,7 +1,8 @@
 from setuptools import setup
 
+
 setup(name='modelutils',
-      version='0.1',
+      version='0.0.1',
       description='Utility scripts for various deep learning models',
       url='https://github.com/shonohs/modelutils',
       license='MIT',
