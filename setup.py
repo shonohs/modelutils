@@ -17,9 +17,11 @@ setuptools.setup(name='modelutils',
                  ],
                  entry_points={
                      'console_scripts': [
+                         'modelutils-dump-caffe=modelutils.caffe.dump:main',
                          'modelutils-dump-coreml=modelutils.coreml.dump:main',
                          'modelutils-dump-onnx=modelutils.onnx.dump:main',
                          'modelutils-dump-tensorflow=modelutils.tensorflow.dump:main',
+                         'modelutils-load-caffe=modelutils.caffe.load:main',
                          'modelutils-load-onnx=modelutils.onnx.load:main',
                          'modelutils-load-tensorflow=modelutils.tensorflow.load:main',
                          'modelutils-run-caffe=modelutils.caffe.run:main',
