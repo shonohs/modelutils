@@ -23,11 +23,12 @@ def benchmark(onnx_model_filepath, image_filepath):
     output_names = [o.name for o in sess.get_outputs()]
     input_name = sess.get_inputs()[0].name
 
+    input_shape = sess.get_inputs()[0].shape
+    print(f"Input shape: {input_shape}")
     if image_filepath:
-        inputs_shape = sess.get_inputs()[0].shape[2:]
-        inputs = preprocess_inputs(image_filepath, inputs_shape)
+        inputs = preprocess_inputs(image_filepath, input_shape[2:])
     else:
-        inputs = np.random.rand(1, *sess.get_inputs()[0].shape[1:])
+        inputs = np.random.rand(1, *input_shape[1:])
     inputs = inputs.astype(get_data_type(sess.get_inputs()[0].type))
 
     with monitor("First run"):
@@ -66,8 +67,8 @@ def preprocess_inputs(image_filename, input_shape, is_bgr=True, normalize_inputs
 
 def main():
     parser = argparse.ArgumentParser("Benchmark an ONNX model")
-    parser.add_argument('onnx_model', type=str, help="Onnx model to use")
-    parser.add_argument('--image_filename', type=str, default=None, help="Image file to use. If not provided, use a random tensor as input")
+    parser.add_argument('onnx_model', help="Onnx model to use")
+    parser.add_argument('--image_filename', default=None, help="Image file to use. If not provided, use a random tensor as input")
 
     args = parser.parse_args()
 
