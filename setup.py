@@ -13,17 +13,12 @@ setuptools.setup(name='modelutils',
                      'onnx',
                      'onnxruntime',
                      'Pillow',
-                     'tensorflow'
+                     'tensorflow-cpu'
                  ],
                  entry_points={
                      'console_scripts': [
-                         'modelutils-dump-caffe=modelutils.caffe.dump:main',
-                         'modelutils-dump-coreml=modelutils.coreml.dump:main',
-                         'modelutils-dump-onnx=modelutils.onnx.dump:main',
-                         'modelutils-dump-tensorflow=modelutils.tensorflow.dump:main',
-                         'modelutils-load-caffe=modelutils.caffe.load:main',
-                         'modelutils-load-onnx=modelutils.onnx.load:main',
-                         'modelutils-load-tensorflow=modelutils.tensorflow.load:main',
+                         'mudump=modelutils.commands.dump:main',
+                         'muload=modelutils.commands.load:main',
                          'modelutils-run-caffe=modelutils.caffe.run:main',
                          'modelutils-run-onnx=modelutils.onnx.run:main',
                          'modelutils-run-tensorflow=modelutils.tensorflow.run:main',
