@@ -19,6 +19,7 @@ setuptools.setup(name='modelutils',
                      'console_scripts': [
                          'mudump=modelutils.commands.dump:main',
                          'muload=modelutils.commands.load:main',
+                         'musummarize=modelutils.commands.summarize:main',
                          'modelutils-run-caffe=modelutils.caffe.run:main',
                          'modelutils-run-onnx=modelutils.onnx.run:main',
                          'modelutils-run-tensorflow=modelutils.tensorflow.run:main',

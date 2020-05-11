@@ -15,4 +15,7 @@ mudump <model_filepath> [-o [<output_filepath>]]
 
 # Serialize a model from text format.
 muload <text_filepath> <output_filepath>
+
+# Show a summary of a model.
+misummarize <model_filepath> [<weights_filepath>]
 ```
