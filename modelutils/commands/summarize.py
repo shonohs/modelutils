@@ -1,14 +1,17 @@
 import argparse
 import pathlib
 from ..common.summarizer import ModelNodesSummarizer, ModelWeightsSummarizer
+from ..caffe.summarize import parse_model as caffe_parse_model
 from ..onnx.summarize import parse_model as onnx_parse_model
 from ..openvino.summarize import parse_model as openvino_parse_model
 
 
-KNOWN_SUFFIX = {'.xml': 'openvino',
+KNOWN_SUFFIX = {'.prototxt': 'caffe',
+                '.xml': 'openvino',
                 '.onnx': 'onnx'}
 
-HANDLERS = {'openvino': openvino_parse_model,
+HANDLERS = {'caffe': caffe_parse_model,
+            'openvino': openvino_parse_model,
             'onnx': onnx_parse_model}
 
 

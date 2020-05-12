@@ -28,7 +28,7 @@ class Model:
         return self._attrs
 
     def add_node(self, op, name, inputs, attrs):
-        assert name not in self._nodes
+        assert name not in self._nodes, f"Duplicated name: {name}"
         self._nodes[name] = Model.Node(op, name, inputs, attrs)
 
     def add_data(self, name, data):

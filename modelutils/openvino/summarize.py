@@ -13,7 +13,7 @@ class ConvolutionTransformer:
 
         node_names_to_be_removed = set()
         for node in model.nodes.values():
-            if node.op == 'Convolution' and len(node.inputs) == 2:
+            if node.op in ['Convolution', 'GroupConvolution'] and len(node.inputs) == 2:
                 outputs = output_maps[node.name]
                 if len(outputs) == 1 and outputs[0].op == 'Add' and outputs[0].inputs[1] in model.data:
                     add_node = outputs[0]
