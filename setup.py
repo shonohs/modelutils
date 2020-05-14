@@ -2,7 +2,7 @@ import setuptools
 
 
 setuptools.setup(name='modelutils',
-                 version='0.0.2',
+                 version='0.0.3',
                  description='Utility scripts for various deep learning models',
                  url='https://github.com/shonohs/modelutils',
                  license='MIT',
