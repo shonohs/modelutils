@@ -17,5 +17,5 @@ mudump <model_filepath> [-o [<output_filepath>]]
 muload <text_filepath> <output_filepath>
 
 # Show a summary of a model.
-misummarize <model_filepath> [<weights_filepath>]
+musummarize <model_filepath> [<weights_filepath>]
 ```
