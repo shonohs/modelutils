@@ -26,6 +26,7 @@ def summarize(model_filepaths, model_type):
 
     model = handler(*model_filepaths)
 
+    model.validate()
     summarizers = [ModelNodesSummarizer, ModelWeightsSummarizer]
     for s in summarizers:
         summarizer = s()

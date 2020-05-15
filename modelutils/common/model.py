@@ -42,6 +42,39 @@ class Model:
     def remove_node(self, name):
         del self._nodes[name]
 
+    def validate(self):
+        input_node_name = self._get_input_name()
+        output_maps = collections.defaultdict(list)
+        for node in self._nodes.values():
+            for i in node.inputs:
+                output_maps[i].append(node.name)
+
+        stack = [input_node_name]
+        stack_counts = [1]
+        current_trace = []
+        visited = set()
+        while stack:
+
+            current = stack.pop()
+            visited.add(current)
+            while stack_counts and stack_counts[-1] == 0:
+                stack_counts.pop()
+                current_trace.pop()
+
+            stack_counts[-1] -= 1
+
+            next_node_names = output_maps[current]
+            next_node_in_trace = set(current_trace).intersection(next_node_names)
+            if next_node_in_trace:
+                print(f"Trace: {current_trace}")
+                raise RuntimeError(f"Cycle detected: {current} -> {next_node_in_trace}")
+            next_node_names = [n for n in next_node_names if n not in visited]
+            stack.extend(next_node_names)
+            stack_counts.append(len(next_node_names))
+            current_trace.append(current)
+
+            assert sum(stack_counts) == len(stack), f"stack_counts: {stack_counts}, stack: {stack}"
+
     def _data_summary(self, data_id):
         if data_id not in self._data:
             return ""
@@ -89,11 +122,13 @@ class Model:
         layer_levels = {}
         queue = [start_node_name]
         index = 0
+        visited = set()
         while queue:
             next_names = []
             for name in queue:
-                next_names.extend(output_maps[name])
-                layer_levels[name] = max(layer_levels[name], index) if name in layer_levels else index
+                if name not in layer_levels or layer_levels[name] < index:
+                    next_names.extend(output_maps[name])
+                    layer_levels[name] = index
             queue = next_names
             index += 1
 
@@ -114,7 +149,7 @@ class Model:
             name, level = queue.pop(0)
             level = min(branch_levels[name], level)
             for i, n in enumerate(nodes[name].inputs):
-                if n in nodes:
+                if n in nodes and not (name in branch_levels and i + level > branch_levels[name]):
                     queue.append((n, i + level))
                 branch_levels[n] = i + level
 

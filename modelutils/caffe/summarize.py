@@ -19,7 +19,7 @@ class CaffeModelParser:
 
             names = layer.top
             for i, name in enumerate(names):
-                new_name = name + '_' if name in top_name_mapper else name
+                new_name = self._make_sure_unique_name(name, top_name_mapper)
                 top_name_mapper[name] = new_name
                 names[i] = new_name
 
@@ -35,6 +35,15 @@ class CaffeModelParser:
                 for name in names:
                     model.add_node(layer.type, name, inputs, {'name': layer.name})
         return model
+
+    @staticmethod
+    def _make_sure_unique_name(name, other_names):
+        new_name = name
+        index = 0
+        while new_name in other_names:
+            new_name = name + '_' + str(index)
+            index += 1
+        return new_name
 
     def _find_weights(self, name):
         import caffe
