@@ -149,7 +149,7 @@ class Model:
             name, level = queue.pop(0)
             level = min(branch_levels[name], level)
             for i, n in enumerate(nodes[name].inputs):
-                if n in nodes and not (name in branch_levels and i + level > branch_levels[name]):
+                if n in nodes and not (n in branch_levels and i + level > branch_levels[n]):
                     queue.append((n, i + level))
                 branch_levels[n] = i + level
 
