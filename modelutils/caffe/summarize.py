@@ -38,9 +38,10 @@ class CaffeModelParser:
 
     @staticmethod
     def _make_sure_unique_name(name, other_names):
+        taken_names = set(list(other_names.keys()) + list(other_names.values()))
         new_name = name
         index = 0
-        while new_name in other_names:
+        while new_name in taken_names:
             new_name = name + '_' + str(index)
             index += 1
         return new_name
@@ -50,6 +51,7 @@ class CaffeModelParser:
         for layer in self.weights.layer:
             if layer.name == name:
                 return [caffe.io.blobproto_to_array(blob) for blob in layer.blobs]
+        raise RuntimeError(f"weights for {name} is not found")
 
 
 def parse_model(prototxt_filepath, caffemodel_filepath):
