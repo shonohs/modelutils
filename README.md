@@ -19,14 +19,29 @@ muload <text_filepath> <output_filepath>
 # Show a summary of a model.
 musummarize <model_filepath> [<weights_filepath>]
 
-# Run a model. input_filepath can be *.{jpg|bmp|png|npy}. If not specified, read npy from stdin.
-murun <model_filepath> [<input_filepath>]
+# Run a model.
+murun <model_filepath> [<input_npy_filepath>] [-o <output_npy_filepath>] [--output_name <node_name>]
+
+# Get diff of two npy arrays.
+npdiff <input_filepath0> <input_filepath1>
 
 # Convert an image to npy.
 npimage <image_filepath> [--size <input_size>] [--scale <scale>] [--subtract <subtract>]
 
+# Convert a npy to json.
+npjson [<npy_filepath>]
+
+# np.max() array
+npmax [<npy_filepath>]
+
+# print npy in human-friendly way
+npprint [<npy_filepath>]
+
+# np.transpose() array
+nptranspose [<npy_filepath>] --perm [<perm> [<perm> ...]]
+
 # np.zeros() array
-npzeros dim [dim [dim ...]]
+npzeros <dim> [<dim> [<dim> ...]]
 ```
 
 ## Examples
@@ -46,6 +61,9 @@ npzeros 1 224 224 3 | murun mobilenetv2.tflite
 
 # Get intermediate layer values
 npimage image.bmp --size 320 --scale 255 | murun mobilenetv2.pb --output_name conv1:0
+
+# Compare two model outputs
+npdiff <(murun model0.onnx image.npy) <(murun model1.onnx image.npy) | npmax
 ```
 
 ## Notes
