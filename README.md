@@ -22,6 +22,12 @@ musummarize <model_filepath> [<weights_filepath>]
 # Run a model.
 murun <model_filepath> [<input_npy_filepath>] [-o <output_npy_filepath>] [--output_name <node_name>]
 
+# Get weights from a model
+mugetdata <model_filepath> --name <data_name>
+
+# Set weights to a model
+musetdata <model_filepath> --name <data_name>
+
 # Get diff of two npy arrays.
 npdiff <input_filepath0> <input_filepath1>
 
@@ -64,6 +70,9 @@ npimage image.bmp --size 320 --scale 255 | murun mobilenetv2.pb --output_name co
 
 # Compare two model outputs
 npdiff <(murun model0.onnx image.npy) <(murun model1.onnx image.npy) | npmax
+
+# Copy weights of one model to another model
+mugetdata model.onnx --name conv1 | nptranspose --perm 2 3 1 0 | musetdata model.pb --name conv1 > new_model.pb
 ```
 
 ## Notes
