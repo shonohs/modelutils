@@ -23,7 +23,7 @@ musummarize <model_filepath> [<weights_filepath>]
 murun <model_filepath> [<input_npy_filepath>] [-o <output_npy_filepath>] [--output_name <node_name>]
 
 # Get weights from a model
-mugetdata <model_filepath> --name <data_name>
+mugetdata <model_filepath> [--name <data_name>]
 
 # Set weights to a model
 musetdata <model_filepath> --name <data_name>

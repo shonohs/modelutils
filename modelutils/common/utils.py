@@ -26,6 +26,7 @@ def detect_type_from_suffix(filepath):
                       '.onnx': 'onnx',
                       '.pb': 'tensorflow',
                       '.prototxt': 'caffe',
+                      '.pth': 'pytorch',
                       '.tflite': 'tensorflowlite'}
 
     for suffix in KNOWN_SUFFIXES:
