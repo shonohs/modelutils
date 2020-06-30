@@ -22,7 +22,8 @@ def write_output_npy(data):
 
 
 def detect_type_from_suffix(filepath):
-    KNOWN_SUFFIXES = {'.mlmodel': 'coreml',
+    KNOWN_SUFFIXES = {'.caffemodel': 'caffe',
+                      '.mlmodel': 'coreml',
                       '.onnx': 'onnx',
                       '.pb': 'tensorflow',
                       '.prototxt': 'caffe',

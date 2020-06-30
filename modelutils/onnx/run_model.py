@@ -25,7 +25,6 @@ def run_model(model_filepath, input_array, output_names):
         sess = onnxruntime.InferenceSession(str(model_filepath))
         output_names = [o.name for o in sess.get_outputs()]
 
-    input_array = input_array.transpose((0, 3, 1, 2))
     outputs = sess.run(output_names, {sess.get_inputs()[0].name: input_array})
 
     return {n: outputs[i] for i, n in enumerate(output_names)}
