@@ -9,11 +9,13 @@ import PIL.Image
 from ..common.utils import read_input_npy, write_output_npy, detect_type_from_suffix
 from ..caffe.run_model import run_model as caffe_run_model
 from ..onnx.run_model import run_model as onnx_run_model
+from ..openvino.run_model import run_model as openvino_run_model
 from ..tensorflow.run_model import run_model as tf_run_model
 from ..tensorflowlite.run_model import run_model as tflite_run_model
 
 HANDLERS = {'caffe': caffe_run_model,
             'onnx': onnx_run_model,
+            'openvino': openvino_run_model,
             'tensorflow': tf_run_model,
             'tensorflowlite': tflite_run_model}
 

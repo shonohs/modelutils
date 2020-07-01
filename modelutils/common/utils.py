@@ -28,7 +28,8 @@ def detect_type_from_suffix(filepath):
                       '.pb': 'tensorflow',
                       '.prototxt': 'caffe',
                       '.pth': 'pytorch',
-                      '.tflite': 'tensorflowlite'}
+                      '.tflite': 'tensorflowlite',
+                      '.xml': 'openvino'}
 
     for suffix in KNOWN_SUFFIXES:
         if suffix in filepath.suffixes:
