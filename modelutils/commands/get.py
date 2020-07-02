@@ -14,6 +14,7 @@ def get(input_filepath, name):
     output_data = input_data[name] if name else next(iter(input_data.values()))
     write_output_npy(output_data)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Get one array from a npy dictionary")
     parser.add_argument('npy_filepath', nargs='?', type=pathlib.Path, help="Filepath to the npy file. If not specified, read from stdin.")

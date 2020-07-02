@@ -24,6 +24,7 @@ def draw_boxes(image_filepath, output_image_filepath, predictions, threshold=0.1
 
     image.save(output_image_filepath)
 
+
 def draw_bounding_boxes(image_filepath, output_filepath):
     input_data = read_input_npy(None)
     input_data = input_data.item()

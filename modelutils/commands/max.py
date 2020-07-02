@@ -1,7 +1,7 @@
 import argparse
 import pathlib
 import numpy as np
-from ..common.utils import read_input_npy, write_output_npy
+from ..common.utils import read_input_npy
 
 
 def np_max(input_filepath):

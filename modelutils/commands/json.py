@@ -1,7 +1,8 @@
 import argparse
 import json
 import pathlib
-from ..common.utils import read_input_npy, write_output_npy
+from ..common.utils import read_input_npy
+
 
 def to_json(input_filepath):
     input_data = read_input_npy(input_filepath)

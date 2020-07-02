@@ -18,7 +18,7 @@ def npy_print(input_filepath, show_stat, show_all):
         if input_data.dtype == np.dtype('O'):
             input_data = input_data.item()
             for name, data in input_data.items():
-              print(f"{name}: {_stats(data)}")
+                print(f"{name}: {_stats(data)}")
         else:
             print(_stats(input_data))
     else:

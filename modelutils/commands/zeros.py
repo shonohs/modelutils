@@ -1,8 +1,6 @@
 import argparse
-import io
-import pathlib
-import sys
 import numpy as np
+from ..common.utils import write_output_npy
 
 
 def zeros(dims, value):
@@ -10,10 +8,7 @@ def zeros(dims, value):
     if value:
         zeros += value
 
-    buf = io.BytesIO()
-    np.save(buf, zeros)
-    buf.seek(0)
-    sys.stdout.buffer.write(buf.read())
+    write_output_npy(zeros)
 
 
 def main():
