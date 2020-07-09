@@ -19,13 +19,17 @@ def draw_boxes(image_filepath, output_image_filepath, predictions, threshold=0.1
     for prediction in predictions:
         if prediction[1] >= threshold:
             color = COLOR_CODES[prediction[0] % len(COLOR_CODES)]
-            draw.rectangle(((prediction[2] * w, prediction[3] * h), (prediction[4] * w, prediction[5] * h)), outline=color)
-            print(f"class: {prediction[0]}, prob: {prediction[1]}, box: {prediction[2:]}")
+            x, y = prediction[2] * w, prediction[3] * h
+            x2, y2 = prediction[4] * w, prediction[5] * h
+            width = 2 if prediction[1] > 0.5 else 1
+            draw.rectangle(((x, y), (x2, y2)), outline=color, width=width)
+            draw.text((x + 2, y + 2), f"{prediction[0]} ({int(prediction[1]*100)}%)", fill=color)
+            print(f"label: {prediction[0]}, prob: {prediction[1]:.5f}, box: ({prediction[2]:.5f}, {prediction[3]:.5f}), ({prediction[4]:.5f}, {prediction[5]:.5f})")
 
     image.save(output_image_filepath)
 
 
-def draw_bounding_boxes(image_filepath, output_filepath):
+def draw_bounding_boxes(image_filepath, output_filepath, is_yxyx):
     input_data = read_input_npy(None)
     input_data = input_data.item()
 
@@ -38,6 +42,9 @@ def draw_bounding_boxes(image_filepath, output_filepath):
     for i in range(num_detections):
         predictions.append([int(detected_classes[i]), detected_scores[i], *detected_boxes[i]])
 
+    if is_yxyx:  # Convert (x_min, y_min, x_max, y_max) => (y_min, x_min, y_max, x_max).
+        predictions = [[p[0], p[1], p[3], p[2], p[5], p[4]] for p in predictions]
+
     draw_boxes(image_filepath, output_filepath, predictions)
     print(f"Saved to {output_filepath}")
 
@@ -46,9 +53,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('image_filepath', type=pathlib.Path)
     parser.add_argument('output_filepath', type=pathlib.Path)
+    parser.add_argument('--yxyx', action='store_true', help="The box format is [y_min, x_min, y_max, x_max]")
 
     args = parser.parse_args()
-    draw_bounding_boxes(args.image_filepath, args.output_filepath)
+    draw_bounding_boxes(args.image_filepath, args.output_filepath, args.yxyx)
 
 
 if __name__ == '__main__':
