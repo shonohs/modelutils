@@ -1,7 +1,5 @@
-import tensorflow
-
-
 def set_data(model_filepath, name, value):
+    import tensorflow
     graph_def = tensorflow.compat.v1.GraphDef()
     graph_def.ParseFromString(model_filepath.read_bytes())
 

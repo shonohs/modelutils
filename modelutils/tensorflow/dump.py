@@ -1,5 +1,3 @@
-
-
 def dump_model(filepath):
     import tensorflow
     try:

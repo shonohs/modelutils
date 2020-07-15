@@ -6,7 +6,15 @@ Collection of utility scripts for ONNX/TensorFlow/CoreML/Caffe/OpenVino models.
 pip install modelutils
 ```
 
-If you would like to use caffe or openvino related commands, please follow their instruction to install the required packages.
+Additional dependencies are required for each platform:
+```bash
+pip install tensorflow-cpu  # For TensorFlow/TensorFlowLite models
+pip install coremltools  # For CoreML models
+pip install onnx onnxruntime  # For ONNX models
+
+pip install 'modelutils[all]'  # Install those 3 dpendencies.
+```
+For Caffe and OpenVino, please follow the official documents.
 
 ## Usage
 ```

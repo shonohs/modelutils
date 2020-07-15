@@ -1,6 +1,3 @@
-import tensorflow
-
-
 def _get_graph_inputs_outputs(graph_def):
     input_names = []
     inputs_set = set()
@@ -19,6 +16,7 @@ def _get_graph_inputs_outputs(graph_def):
 
 
 def run_model(model_filepath, input_array, output_names):
+    import tensorflow
     graph_def = tensorflow.compat.v1.GraphDef()
     graph_def.ParseFromString(model_filepath.read_bytes())
 

@@ -1,7 +1,5 @@
-import tensorflow
-
-
 def run_model(model_filepath, input_array, output_names):
+    import tensorflow
     interpreter = tensorflow.lite.Interpreter(model_path=str(model_filepath))
     interpreter.allocate_tensors()
 
