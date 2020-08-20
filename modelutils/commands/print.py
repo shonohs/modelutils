@@ -6,7 +6,7 @@ from ..common.utils import read_input_npy
 
 
 def _stats(data):
-    return f"shape: {data.shape} min: {np.min(data)} max: {np.max(data)} mean: {np.mean(data)}"
+    return f"shape: {data.shape} min: {np.min(data)} max: {np.max(data)} mean: {np.mean(data)} dtype: {data.dtype}"
 
 
 def npy_print(input_filepath, show_stat, show_all):
