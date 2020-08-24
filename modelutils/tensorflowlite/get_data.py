@@ -15,7 +15,7 @@ def get_data(model_filepath, name):
     tensors_by_name = {tensor.name.decode('utf-8'): tensor for tensor in graph.tensors if tensor.buffer > 1 and model.buffers[tensor.buffer].data is not None}
 
     if name:
-        return _get_value_for_tensor(graph, tensors_by_name[name])
+        return _get_value_for_tensor(model, tensors_by_name[name])
     return {name: _get_value_for_tensor(model, value) for name, value in tensors_by_name.items()}
 
 
