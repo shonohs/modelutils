@@ -8,9 +8,13 @@ def _add_output_node(input_model_filepath, output_model_filepath, output_node_na
 
     model = onnx.ModelProto()
     model.ParseFromString(input_model_filepath.read_bytes())
+
+    # Assume the output type is same with the input type.
+    tensor_type = model.graph.input[0].type.tensor_type.elem_type
+
     existing_output_names = set([o.name for o in model.graph.output])
     for output_name in set(output_node_names) - existing_output_names:
-        model.graph.output.append(onnx.helper.make_tensor_value_info(output_name, onnx.TensorProto.FLOAT, None))
+        model.graph.output.append(onnx.helper.make_tensor_value_info(output_name, tensor_type, None))
 
     output_model_filepath.write_bytes(model.SerializeToString())
 
@@ -23,7 +27,6 @@ def run_model(model_filepath, input_array, output_names):
             temp_model_filepath = pathlib.Path(tempdir) / 'model.onnx'
             _add_output_node(model_filepath, temp_model_filepath, output_names)
             sess = onnxruntime.InferenceSession(str(temp_model_filepath))
-
     else:
         sess = onnxruntime.InferenceSession(str(model_filepath))
         output_names = [o.name for o in sess.get_outputs()]

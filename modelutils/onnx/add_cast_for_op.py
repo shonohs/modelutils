@@ -52,7 +52,7 @@ def main():
     parser.add_argument('input_filepath', type=str)
     parser.add_argument('output_filepath', type=str)
     parser.add_argument('--op_type', type=str, default='NonMaxSuppression', help="Operator type")
-    parser.add_argument('--input_indices', type=str, nargs='+', default=[0, 1, 3, 4], help="input indices")
+    parser.add_argument('--input_indices', type=str, nargs='+', default=[0, 1], help="input indices")
     parser.add_argument('--to', type=str, default='FLOAT', help="The data type to which the tensors are cast")
 
     args = parser.parse_args()
