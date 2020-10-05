@@ -1,12 +1,14 @@
 import argparse
 import pathlib
 from ..caffe.load import load_model as caffe_load_model
+from ..coreml.load import load_model as coreml_load_model
 from ..common.utils import detect_type_from_suffix
 from ..onnx.load import load_model as onnx_load_model
 from ..tensorflow.load import load_model as tensorflow_load_model
 
 
 HANDLERS = {'caffe': caffe_load_model,
+            'coreml': coreml_load_model,
             'onnx': onnx_load_model,
             'tensorflow': tensorflow_load_model}
 
