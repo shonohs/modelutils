@@ -2,12 +2,14 @@ import argparse
 import pathlib
 from ..common.utils import write_output_npy, detect_type_from_suffix
 from ..caffe.get_data import get_data as caffe_get_data
+from ..coreml.get_data import get_data as coreml_get_data
 from ..onnx.get_data import get_data as onnx_get_data
 from ..pytorch.get_data import get_data as pytorch_get_data
 from ..tensorflow.get_data import get_data as tf_get_data
 from ..tensorflowlite.get_data import get_data as tflite_get_data
 
 HANDLERS = {'caffe': caffe_get_data,
+            'coreml': coreml_get_data,
             'onnx': onnx_get_data,
             'pytorch': pytorch_get_data,
             'tensorflow': tf_get_data,

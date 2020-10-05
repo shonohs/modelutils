@@ -2,11 +2,13 @@ import argparse
 import pathlib
 import sys
 from ..common.utils import read_input_npy, detect_type_from_suffix
+from ..coreml.set_data import set_data as coreml_set_data
 from ..onnx.set_data import set_data as onnx_set_data
 from ..tensorflow.set_data import set_data as tf_set_data
 from ..tensorflowlite.set_data import set_data as tflite_set_data
 
-HANDLERS = {'onnx': onnx_set_data,
+HANDLERS = {'coreml': coreml_set_data,
+            'onnx': onnx_set_data,
             'tensorflow': tf_set_data,
             'tensorflowlite': tflite_set_data}
 
