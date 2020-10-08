@@ -28,6 +28,7 @@ setuptools.setup(name='modelutils',
                          'npget=modelutils.commands.get:main',
                          'npmax=modelutils.commands.max:main',
                          'npprint=modelutils.commands.print:main',
+                         'nprand=modelutils.commands.rand:main',
                          'nptranspose=modelutils.commands.transpose:main'
                      ]
                  })
