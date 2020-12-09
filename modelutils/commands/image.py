@@ -8,7 +8,7 @@ import numpy as np
 
 def load_image(image_filepath, image_size, scale, subtract_value, bgr):
     image = PIL.Image.open(image_filepath)
-    image = image.resize((image_size, image_size), PIL.Image.ANTIALIAS)
+    image = image.resize((image_size, image_size))
     image = np.array(image, dtype=np.float32) / 255
     image *= scale
     image -= subtract_value
