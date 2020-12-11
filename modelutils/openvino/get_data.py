@@ -18,6 +18,7 @@ def get_const_weight(weights, layer):
     offset = int(data_node.get('offset'))
     size = int(data_node.get('size'))
     dtype = _ELEMENT_TYPE_TO_DTYPE[data_node.get('element_type')]
+    assert offset + size <= len(weights), f"Tried to read {offset}:{offset+size} from size {len(weights)} buffer."
     return np.frombuffer(weights[offset:offset+size], dtype=dtype).reshape(*shape)
 
 

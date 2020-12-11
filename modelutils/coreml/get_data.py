@@ -31,7 +31,7 @@ def get_data(model_filepath, name):
         layer_type = layer.WhichOneof('layer')
         if layer_type == 'convolution':
             conv = layer.convolution
-            data_dict[layer.name + '/' + 'weights'] = _read_value(conv.weights, [conv.kernelChannels, conv.outputChannels, *conv.kernelSize])
+            data_dict[layer.name + '/' + 'weights'] = _read_value(conv.weights, [conv.outputChannels, conv.kernelChannels, *conv.kernelSize])
             if layer.convolution.hasBias:
                 data_dict[layer.name + '/' + 'bias'] = _read_value(conv.bias, [conv.outputChannels])
         elif layer_type == 'loadConstant':
